@@ -1,3 +1,4 @@
+import { rejects } from 'assert';
 import { aws_sdb } from 'aws-cdk-lib';
 // import { v4 } from 'uuid';
 import { S3 } from 'aws-sdk';
@@ -10,33 +11,42 @@ async function handler(event: any, context: any) {
 
   const params = {
     Bucket: 'shyju-firstbucket',
-    Key: 'testfile.json',
+    Key: 'testfile.txt',
   };
 
-  let data = async function () {
-    let records = [{}];
-    const stream = s3Client.getObject(params).createReadStream();
-    let lineReader = readline.createInterface({ input: stream });
+  let records: string[] = [];
+  const stream = s3Client.getObject(params).createReadStream();
+  let lineReader = readline.createInterface({ input: stream });
 
-    lineReader
-      .on('line', (line) => {
-        records.push(line);
-      })
-      .on('close', () => {
-        console.log('Finished processing S3 file.');
-        console.log(records);
-        return JSON.stringify(records);
+  const getData = (): Promise<string[]> => {
+    return new Promise((resolve, reject) => {
+      lineReader
+        .on('line', (line) => {
+          records.push(line);
+        })
+        .on('close', () => {
+          console.log('Finished processing S3 file.');
+          resolve(records);
+        });
+    });
+  };
+
+  // Call the lamda function here.
+  getData()
+    .then((data) => {
+      data.forEach((el: string) => {
+        console.log(el);
       });
-  };
-
-  const result = await data();
+      console.log(data);
+    })
+    .catch((err) => console.log(err));
 
   console.log('Got An Event:');
-  console.log(event);
+  console.log(`event ${event}`);
 
   return {
     statusCode: 200,
-    body: 'Hello From Lambda!' + result,
+    body: 'Invoked Lambda successfully!',
   };
 }
 
