@@ -7,6 +7,7 @@ import { GenericTable } from './GenericTable';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { S3 } from 'aws-sdk';
+import { creatS3 } from './s3services';
 // import { aws_lambda as lambda } from 'aws-cdk-lib';
 // import { Code, Runtime } from 'aws-cdk-lib/aws-lambda';
 // import { aws_lambda_nodejs as lambda_nodejs } from 'aws-cdk-lib';
@@ -24,6 +25,8 @@ export class LambdaBackendStack extends Stack {
     //   handler: 'hello.main',
     //   code: Code.fromAsset(path.join(__dirname, '../services/hello')),
     // });
+
+    new creatS3('MyFirstBucket', this);
 
     const lambdaNodjsFn = new NodejsFunction(this, 'helloLambdaNodejs', {
       entry: path.join(__dirname, '../services/node-lambda/hello.ts'),

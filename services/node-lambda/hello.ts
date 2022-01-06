@@ -3,6 +3,7 @@ import { aws_sdb } from 'aws-cdk-lib';
 // import { v4 } from 'uuid';
 import { S3 } from 'aws-sdk';
 import * as readline from 'readline';
+import { sampleDataAdd } from '../sampleTable/create';
 
 const s3Client = new S3();
 
@@ -36,6 +37,7 @@ async function handler(event: any, context: any) {
     .then((data) => {
       data.forEach((el: string) => {
         console.log(el);
+        sampleDataAdd(el);
       });
       console.log(data);
     })

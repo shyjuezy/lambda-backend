@@ -1,5 +1,5 @@
-import { Stack } from "aws-cdk-lib";
-import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
+import { Stack } from 'aws-cdk-lib';
+import { aws_dynamodb as dynamodb } from 'aws-cdk-lib';
 
 export class GenericTable {
   private name: string;
